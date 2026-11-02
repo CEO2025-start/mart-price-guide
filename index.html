@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이마트·트레이더스·쿠팡 가격 비교</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-emerald-600">🛒 마트 최저가 비교</h1>
+            <span id="last-updated" class="text-xs text-gray-400">마지막 업데이트: 확인 중...</span>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 py-6">
+        <div id="product-list" class="space-y-4">
+            <!-- 데이터가 동적으로 로드됩니다 -->
+        </div>
+    </main>
+
+    <script>
+        fetch('data.json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('last-updated').innerText = `마지막 업데이트: ${data.updated_at}`;
+                const listEl = document.getElementById('product-list');
+                listEl.innerHTML = '';
+                
+                data.products.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4';
+                    card.innerHTML = `
+                        <div>
+                            <span class="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-medium">${p.category}</span>
+                            <h2 class="font-bold text-lg mt-1">${p.name}</h2>
+                            <p class="text-xs text-gray-500">${p.unit_info}</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 w-full md:w-auto text-center">
+                            <div class="bg-gray-50 p-2 rounded-lg">
+                                <span class="text-[10px] text-gray-500 block">쿠팡</span>
+                                <strong class="text-sm">${p.coupang_price.toLocaleString()}원</strong>
+                            </div>
+                            <div class="bg-gray-50 p-2 rounded-lg">
+                                <span class="text-[10px] text-gray-500 block">이마트</span>
+                                <strong class="text-sm">${p.emart_price.toLocaleString()}원</strong>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-lg">
+                                <span class="text-[10px] text-emerald-600 font-bold block">트레이더스</span>
+                                <strong class="text-sm text-emerald-700">${p.traders_price.toLocaleString()}원</strong>
+                            </div>
+                        </div>
+                    `;
+                    listEl.appendChild(card);
+                });
+            });
+    </script>
+</body>
+</html>
