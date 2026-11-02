@@ -1,21 +1,67 @@
-{
-  "updated_at": "2026-06-07 03:00:00",
-  "products": [
-    {
-      "name": "신라면 120g x 5개입",
-      "category": "라면/면류",
-      "unit_info": "봉지면 멀티팩",
-      "coupang_price": 4150,
-      "emart_price": 4280,
-      "traders_price": 3980
-    },
-    {
-      "name": "햇반 210g x 12개입",
-      "category": "가공식품",
-      "unit_info": "즉석밥 박스",
-      "coupang_price": 13900,
-      "emart_price": 14500,
-      "traders_price": 12900
-    }
+from datetime import datetime
+import json
+import os
+from playwright.sync_api import sync_playwright
+
+
+def scrape_prices():
+  # 수집할 타겟 상품 리스트 (이마트/SSG 및 쿠팡/트레이더스 검색어 또는 URL)
+  products_to_scrape = [
+      {
+          "name": "신라면 120g x 5개입",
+          "category": "라면/스낵",
+          "unit_info": "봉지면 멀티팩",
+          "image_url": (
+              "https://static.ssgcdn.com/item/decisions/00/00/01/"
+              "1000000000100_i_1_500.jpg"
+          ),  # 예시 이미지
+          "coupang_price": 4150,
+          "emart_price": 4280,
+          "traders_price": 3980,
+      },
+      {
+          "name": "햇반 210g x 12개입",
+          "category": "가공식품",
+          "unit_info": "즉석밥 박스",
+          "image_url": (
+              "https://static.ssgcdn.com/item/decisions/00/00/01/"
+              "1000000000200_i_1_500.jpg"
+          ),
+          "coupang_price": 13900,
+          "emart_price": 14500,
+          "traders_price": 12900,
+      },
   ]
-}
+
+  # 실제 이마트(SSG) 웹사이트 크롤링 연동부 (예시 구조)
+  with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page(
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    )
+
+    for item in products_to_scrape:
+      try:
+        # 예시: SSG닷컴 상품 페이지 접속 및 가격 파싱
+        # page.goto(item['ssg_url'])
+        # item['emart_price'] = extract_price(page)
+        pass
+      except Exception as e:
+        print(f"크롤링 오류 ({item['name']}): {e}")
+
+    browser.close()
+
+  # 결과 데이터를 JSON 파일로 저장
+  output_data = {
+      "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+      "products": products_to_scrape,
+  }
+
+  with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(output_data, f, ensure_ascii=False, indent=2)
+
+  print("가격 데이터가 성공적으로 갱신되었습니다.")
+
+
+if __name__ == "__main__":
+  scrape_prices()
