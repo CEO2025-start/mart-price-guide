@@ -1,0 +1,21 @@
+{
+  "updated_at": "2026-06-07 03:00:00",
+  "products": [
+    {
+      "name": "신라면 120g x 5개입",
+      "category": "라면/면류",
+      "unit_info": "봉지면 멀티팩",
+      "coupang_price": 4150,
+      "emart_price": 4280,
+      "traders_price": 3980
+    },
+    {
+      "name": "햇반 210g x 12개입",
+      "category": "가공식품",
+      "unit_info": "즉석밥 박스",
+      "coupang_price": 13900,
+      "emart_price": 14500,
+      "traders_price": 12900
+    }
+  ]
+}
